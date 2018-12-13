@@ -1,32 +1,37 @@
+@import url('https://fonts.googleapis.com/css?family=Old+Standard+TT|Roboto:300|Source+Sans+Pro:300');
+
 .App {
   text-align: center;
+  justify-content: center;
+  height: 100%;
+  display: block;
+  font-family: 'Roboto', sans-sans-serif;
+  color: #eee;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.sectional {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+}
+
+.parallax {
+  min-height: 60vh;
+  position: relative;
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.interParallax {
+  background-color: #282E34;
+  min-height: 30vh;
+  color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
