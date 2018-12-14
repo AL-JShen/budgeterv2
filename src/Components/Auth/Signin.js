@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
+import { connect } from 'react-redux';
 
 class Signin extends Component {
 
@@ -14,10 +15,22 @@ class Signin extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.props.getCurrentUser(user)
+        this.props.history.push('/overview');
+      } else {
+        this.props.history.push('/welcome');
+      }
+    })
+  }
+
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
     })
+
   }
 
   handleSubmit(event) {
@@ -47,19 +60,7 @@ class Signin extends Component {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().useDeviceLanguage();
     firebase.auth().signInWithRedirect(provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        // var token = result.credential.accessToken;
-        // The signed-in user info.
-        // var user = result.user;
-      })
-      .catch((error) => {
-        this.setState({
-          error: error.message,
-        })
-      });
   }
-
 
   render() {
     return (
@@ -83,7 +84,24 @@ class Signin extends Component {
       </div>
     );
   }
-
 }
 
-export default Signin;
+const mapStateToProps = (state, ownProps) => {
+  return({
+    displayName: state.user.displayName,
+    uid: state.user.uid,
+  })
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return({
+    getCurrentUser: (user) => {
+      dispatch({
+        type: 'GET_USER',
+        user: user
+      })
+    }
+  })
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signin);

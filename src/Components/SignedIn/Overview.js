@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Sidebar from './Sidebar';
 import Log from './Log';
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme} from 'victory';
-import firebase from 'firebase';
+import { connect } from 'react-redux';
 
 const data = [
   {quarter: 1, earnings: 13000},
@@ -13,31 +13,15 @@ const data = [
 
 class Overview extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.setState({
-          ...user
-        })
-      }
-    });
-  }
-
   render() {
+    console.log(this.props)
     return (
       <div>
 
         <Sidebar />
         <Log />
 
-        Hello {this.state.displayName}
-        <br />
-        User {this.state.uid}
+        Hello {this.props.displayName}
 
         <div className='overview'>
           <VictoryChart domainPadding={20} theme={VictoryTheme.material}>
@@ -62,4 +46,11 @@ class Overview extends Component {
 
 }
 
-export default Overview;
+const mapStateToProps = (state) => {
+  return({
+    displayName: state.user.displayName,
+    uid: state.user.uid
+  })
+}
+
+export default connect(mapStateToProps)(Overview);
