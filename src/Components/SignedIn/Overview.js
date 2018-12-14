@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Sidebar from './Sidebar';
 import Log from './Log';
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme} from 'victory';
-
+import firebase from 'firebase';
 
 const data = [
   {quarter: 1, earnings: 13000},
@@ -11,15 +11,33 @@ const data = [
   {quarter: 4, earnings: 19000}
 ];
 
-
 class Overview extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({
+          ...user
+        })
+      }
+    });
+  }
 
   render() {
     return (
       <div>
-      
+
         <Sidebar />
         <Log />
+
+        Hello {this.state.displayName}
+        <br />
+        User {this.state.uid}
 
         <div className='overview'>
           <VictoryChart domainPadding={20} theme={VictoryTheme.material}>

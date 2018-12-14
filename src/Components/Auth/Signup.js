@@ -41,6 +41,11 @@ class Signup extends Component {
             last: last,
           })
         }
+        const newUser = firebase.auth().currentUser;
+        newUser.sendEmailVerification();
+        newUser.updateProfile({
+          displayName: `${first} ${last}`
+        })
         this.setState({
           first: '',
           last: '',
@@ -92,7 +97,7 @@ class Signup extends Component {
             <button type="submit">Submit</button>
           </form>
         </div>
-        
+
       </div>
     );
   }
