@@ -15,6 +15,7 @@ class Signup extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleGoogleAuth = this.handleGoogleAuth.bind(this);
   }
 
   handleChange(event) {
@@ -24,16 +25,13 @@ class Signup extends Component {
   }
 
   handleSubmit(event) {
-
     event.preventDefault()
-
     const email = this.state.email;
     const password = this.state.pw;
     const first = this.state.first;
     const last = this.state.last;
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
-
       .then((user) => {
         if (user.additionalUserInfo.isNewUser) {
           db.collection('users').doc(user.user.uid).set({
@@ -50,13 +48,28 @@ class Signup extends Component {
           pw: ''
         })
       })
-
       .catch((error) => {
         this.setState({
           error: error.message,
         })
       })
+  }
 
+  handleGoogleAuth() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().useDeviceLanguage();
+    firebase.auth().signInWithRedirect(provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        // var token = result.credential.accessToken;
+        // The signed-in user info.
+        // var user = result.user;
+      })
+      .catch((error) => {
+        this.setState({
+          error: error.message,
+        })
+      });
   }
 
   render() {
@@ -64,7 +77,10 @@ class Signup extends Component {
       <div>
 
         <div>
+          <button onClick={this.handleGoogleAuth}>Sign in with Google</button>
+        </div>
 
+        <div>
           <form onSubmit={this.handleSubmit}>
             <input type="text" name='first' placeholder='First Name' value={this.state.first} onChange={this.handleChange} />
             <input type="text" name='last' placeholder='Last Name' value={this.state.last} onChange={this.handleChange} />
@@ -75,8 +91,8 @@ class Signup extends Component {
             <br />
             <button type="submit">Submit</button>
           </form>
-
         </div>
+        
       </div>
     );
   }
