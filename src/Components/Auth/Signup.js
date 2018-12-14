@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
+import db from '../SignedIn/FirestoreDB';
 
-class Signin extends Component {
+class Signup extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      first: '',
+      last: '',
       email: '',
       pw: '',
-      error: '',
+      error: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,9 +29,20 @@ class Signin extends Component {
 
     const email = this.state.email;
     const password = this.state.pw;
+    const first = this.state.first;
+    const last = this.state.last;
 
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .then(() => {
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+
+      .then((user) => {
+        if (user.additionalUserInfo.isNewUser) {
+          db.collection('users').doc(user.user.uid).set({
+            uid: user.user.uid,
+            email: user.user.email,
+            first: first,
+            last: last,
+          })
+        }
         this.setState({
           first: '',
           last: '',
@@ -36,6 +50,7 @@ class Signin extends Component {
           pw: ''
         })
       })
+
       .catch((error) => {
         this.setState({
           error: error.message,
@@ -51,6 +66,8 @@ class Signin extends Component {
         <div>
 
           <form onSubmit={this.handleSubmit}>
+            <input type="text" name='first' placeholder='First Name' value={this.state.first} onChange={this.handleChange} />
+            <input type="text" name='last' placeholder='Last Name' value={this.state.last} onChange={this.handleChange} />
             <input type="text" name='email' placeholder='Email' value={this.state.email} onChange={this.handleChange} />
             <input type="password" name='pw' placeholder='Password' value={this.state.pw} onChange={this.handleChange} />
             {this.state.error}
@@ -66,4 +83,4 @@ class Signin extends Component {
 
 }
 
-export default Signin;
+export default Signup;
