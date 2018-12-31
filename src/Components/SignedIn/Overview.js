@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Sidebar from './Sidebar';
 import Log from './Log';
+import db from './FirestoreDB';
 import firebase from 'firebase';
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme} from 'victory';
 import { connect } from 'react-redux';
@@ -18,7 +19,11 @@ class Overview extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      transactions: [],
+    }
     this.updateUser = this.updateUser.bind(this);
+    this.getTransactions = this.getTransactions.bind(this);
   }
 
   updateUser() {
@@ -28,8 +33,22 @@ class Overview extends Component {
     }
   }
 
-  componentDidMount() {
+  getTransactions() {
+    let transList = db.collection('users').doc(this.props.uid).collection('transactions');
+    transList.onSnapshot((docSnapshot) => {
+      this.setState({
+        transactions: Array.from(docSnapshot.docs)
+      }, () => {
+        this.state.transactions.forEach((item) => {
+          console.log(item.data())
+        })
+      })
+    })
+  }
+
+  componentWillMount() {
     this.updateUser();
+    this.getTransactions();
   }
 
   render() {
@@ -41,6 +60,10 @@ class Overview extends Component {
         Hello {this.props.displayName}
 
         <Log />
+
+        {this.state.transactions.map((item, i) => (
+          <div key={i}>{item.data().cost}</div>
+        ))}
 
         <div className='overview'>
           <VictoryChart domainPadding={20} theme={VictoryTheme.material}>
@@ -72,15 +95,13 @@ const mapStateToProps = (state) => {
   })
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return({
+const mapDispatchToProps = (dispatch) => ({
     getCurrentUser: (user) => {
       dispatch({
         type: 'GET_USER',
         user: user
       })
     }
-  })
-}
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Overview);

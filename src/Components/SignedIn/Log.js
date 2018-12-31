@@ -36,7 +36,6 @@ class Log extends Component {
     const cost = this.state.cost;
     const category = this.state.category;
     const date = this.state.date;
-    console.log(cost, category, date);
     this.setState({
       cost: '',
       category: '',
