@@ -19,17 +19,6 @@ class Signup extends Component {
     this.handleGoogleAuth = this.handleGoogleAuth.bind(this);
   }
 
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.props.getCurrentUser(user)
-        this.props.history.push('/overview');
-      } else {
-        this.props.history.push('/welcome');
-      }
-    })
-  }
-
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
@@ -44,26 +33,35 @@ class Signup extends Component {
     const last = this.state.last;
 
     firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then((user) => {
-        if (user.additionalUserInfo.isNewUser) {
-          db.collection('users').doc(user.user.uid).set({
-            uid: user.user.uid,
-            email: user.user.email,
-            first: first,
-            last: last,
+      .then((result) => {
+        var userDoc = db.collection('users').doc(result.user.uid)
+        userDoc.get()
+          .then((doc) => {
+            if (doc.exists) {
+              //pass
+            } else {
+              userDoc.set({
+                uid: result.user.uid,
+                email: result.user.email,
+                first: first,
+                last: last,
+              })
+            }
           })
-        }
+
         const newUser = firebase.auth().currentUser;
         newUser.sendEmailVerification();
         newUser.updateProfile({
           displayName: `${first} ${last}`
         })
+        this.props.getCurrentUser(newUser)
         this.setState({
           first: '',
           last: '',
           email: '',
           pw: ''
         })
+        this.props.history.push('/overview')
       })
       .catch((error) => {
         this.setState({
@@ -74,8 +72,25 @@ class Signup extends Component {
 
   handleGoogleAuth() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().useDeviceLanguage();
-    firebase.auth().signInWithRedirect(provider)
+    firebase.auth().signInWithPopup(provider)
+      .then((result) => {
+        console.log(result);
+        var userDoc = db.collection('users').doc(result.user.uid);
+        userDoc.get()
+          .then((doc) => {
+            if (doc.exists) {
+              //pass
+            } else {
+              userDoc.set({
+                uid: result.user.uid,
+                email: result.user.email,
+                first: result.user.displayName.split(' ')[0],
+                last: result.user.displayName.split(' ')[1]
+              })
+            }
+          })
+        this.props.history.push('/overview');
+      })
   }
 
   render() {

@@ -1,0 +1,37 @@
+[debug] [2018-12-31T03:22:37.218Z] ----------------------------------------------------------------------
+[debug] [2018-12-31T03:22:37.220Z] Command:       /usr/local/Cellar/node/11.5.0/bin/node /usr/local/bin/firebase serve
+[debug] [2018-12-31T03:22:37.220Z] CLI Version:   6.1.2
+[debug] [2018-12-31T03:22:37.220Z] Platform:      darwin
+[debug] [2018-12-31T03:22:37.220Z] Node Version:  v11.5.0
+[debug] [2018-12-31T03:22:37.224Z] Time:          Sun Dec 30 2018 22:22:37 GMT-0500 (Eastern Standard Time)
+[debug] [2018-12-31T03:22:37.224Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-12-31T03:22:37.241Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-12-31T03:22:37.241Z] > authorizing via signed-in user
+[debug] [2018-12-31T03:22:37.241Z] [iam] checking project budgetv2 for permissions ["firebase.projects.get"]
+[debug] [2018-12-31T03:22:37.243Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-12-31T03:22:37.243Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2018-12-31T03:22:37.444Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-31T03:22:37.455Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/budgetv2:testIamPermissions  
+
+[debug] [2018-12-31T03:22:37.815Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-31T03:22:37.817Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/budgetv2  
+ 
+[debug] [2018-12-31T03:22:38.094Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/js/programs/budget2'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2018-12-31T03:22:38.752Z] Fetching environment
+[debug] [2018-12-31T03:22:38.754Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/70428616163:getServerAppConfig  
+ 
+[debug] [2018-12-31T03:22:38.755Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/70428616163/clients/_:getWebAppConfig  
+ 
+[debug] [2018-12-31T03:22:38.959Z] <<< HTTP RESPONSE 200
+[debug] [2018-12-31T03:22:38.960Z] Starting @google-cloud/functions-emulator
+[debug] [2018-12-31T03:22:39.012Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: firebase-hosting
+[info] ✔  hosting: Local server: http://localhost:5000
+[debug] [2018-12-31T03:22:40.007Z] Parsing function triggers
+[info] i  functions: No HTTPS functions found. Use firebase functions:shell if you would like to emulate other types of functions.

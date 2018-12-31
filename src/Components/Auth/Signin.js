@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
+import db from '../SignedIn/FirestoreDB';
 
 class Signin extends Component {
 
@@ -13,24 +14,13 @@ class Signin extends Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        this.props.getCurrentUser(user)
-        this.props.history.push('/overview');
-      } else {
-        this.props.history.push('/welcome');
-      }
-    })
+    this.handleGoogleAuth = this.handleGoogleAuth.bind(this);
   }
 
   handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value
     })
-
   }
 
   handleSubmit(event) {
@@ -48,6 +38,7 @@ class Signin extends Component {
           email: '',
           pw: ''
         })
+        this.props.history.push('/overview');
       })
       .catch((error) => {
         this.setState({
@@ -58,8 +49,25 @@ class Signin extends Component {
 
   handleGoogleAuth() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().useDeviceLanguage();
-    firebase.auth().signInWithRedirect(provider)
+    firebase.auth().signInWithPopup(provider)
+      .then((result) => {
+        console.log(result);
+        var userDoc = db.collection('users').doc(result.user.uid);
+        userDoc.get()
+          .then((doc) => {
+            if (doc.exists) {
+              //pass
+            } else {
+              userDoc.set({
+                uid: result.user.uid,
+                email: result.user.email,
+                first: result.user.displayName.split(' ')[0],
+                last: result.user.displayName.split(' ')[1]
+              })
+            }
+          })
+        this.props.history.push('/overview');
+      })
   }
 
   render() {
