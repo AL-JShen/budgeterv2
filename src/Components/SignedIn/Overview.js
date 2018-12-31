@@ -6,14 +6,13 @@ import firebase from 'firebase';
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme} from 'victory';
 import { connect } from 'react-redux';
 
+
 const data = [
   {quarter: 1, earnings: 13000},
   {quarter: 2, earnings: 16500},
   {quarter: 3, earnings: 14250},
   {quarter: 4, earnings: 19000}
-];
-
-
+]
 
 class Overview extends Component {
 
@@ -33,7 +32,12 @@ class Overview extends Component {
   getTransactions() {
     let transList = db.collection('users').doc(this.props.uid).collection('transactions');
     transList.onSnapshot((docSnapshot) => {
-      this.props.getTransactions(Array.from(docSnapshot.docs))
+      let dat = docSnapshot.docs.map((doc) => ({
+        category: doc.data().category,
+        cost: doc.data().cost,
+        date: doc.data().date.seconds * 1000
+      }))
+      this.props.getTransactions(dat);
     })
   }
 
@@ -53,9 +57,9 @@ class Overview extends Component {
         <Log />
 
         {this.props.transactions.map((item, i) => {
-          const dat = item.data()
+          const dat = item
           return (
-            <div key={i}>A {dat.category} purchase on {new Date(dat.date.seconds * 1000).toDateString()} cost ${dat.cost}</div>
+            <div key={i}>A {dat.category} purchase on {new Date(dat.date).toDateString()} cost ${dat.cost}</div>
           )
         })}
 
