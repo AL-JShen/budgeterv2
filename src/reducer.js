@@ -16,7 +16,6 @@ const reducer = (state = initState, action) => {
     case ('SIGN_OUT'):
       return initState;
     case ('GET_TRANSACTIONS'):
-      console.log(action.transactions)
       return({
         ...state,
         transactions: action.transactions

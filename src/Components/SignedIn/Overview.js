@@ -64,19 +64,11 @@ class Overview extends Component {
         })}
 
         <div className='overview'>
-          <VictoryChart domainPadding={20} theme={VictoryTheme.material}>
-            <VictoryAxis
-              tickValues={[1, 2, 3, 4]}
-              tickFormat={["Quarter 1", "Quarter 2", "Quarter 3", "Quarter 4"]}
-            />
-            <VictoryAxis
-              dependentAxis
-              tickFormat={(x) => (`$${x}`)}
-            />
+          <VictoryChart domainPadding={20} theme={VictoryTheme.material} scale={{ x: "time" }}>
             <VictoryBar
-              data={data}
-              x='quarter'
-              y='earnings'/>
+              data={this.props.transactions}
+              x={(datum) => new Date(datum.date).toDateString()}
+              y={(datum) => datum.cost}/>
           </VictoryChart>
         </div>
       </div>

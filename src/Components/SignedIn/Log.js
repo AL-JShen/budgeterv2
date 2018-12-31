@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import firebase from 'firebase';
 import db from './FirestoreDB';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
