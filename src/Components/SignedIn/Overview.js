@@ -19,9 +19,6 @@ class Overview extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      transactions: [],
-    }
     this.updateUser = this.updateUser.bind(this);
     this.getTransactions = this.getTransactions.bind(this);
   }
@@ -36,13 +33,7 @@ class Overview extends Component {
   getTransactions() {
     let transList = db.collection('users').doc(this.props.uid).collection('transactions');
     transList.onSnapshot((docSnapshot) => {
-      this.setState({
-        transactions: Array.from(docSnapshot.docs)
-      }, () => {
-        this.state.transactions.forEach((item) => {
-          console.log(item.data())
-        })
-      })
+      this.props.getTransactions(Array.from(docSnapshot.docs))
     })
   }
 
@@ -61,9 +52,12 @@ class Overview extends Component {
 
         <Log />
 
-        {this.state.transactions.map((item, i) => (
-          <div key={i}>{item.data().cost}</div>
-        ))}
+        {this.props.transactions.map((item, i) => {
+          const dat = item.data()
+          return (
+            <div key={i}>A {dat.category} purchase on {new Date(dat.date.seconds * 1000).toDateString()} cost ${dat.cost}</div>
+          )
+        })}
 
         <div className='overview'>
           <VictoryChart domainPadding={20} theme={VictoryTheme.material}>
@@ -73,7 +67,7 @@ class Overview extends Component {
             />
             <VictoryAxis
               dependentAxis
-              tickFormat={(x) => (`$${x / 1000}k`)}
+              tickFormat={(x) => (`$${x}`)}
             />
             <VictoryBar
               data={data}
@@ -81,7 +75,6 @@ class Overview extends Component {
               y='earnings'/>
           </VictoryChart>
         </div>
-
       </div>
     );
   }
@@ -91,7 +84,8 @@ class Overview extends Component {
 const mapStateToProps = (state) => {
   return({
     displayName: state.user.displayName,
-    uid: state.user.uid
+    uid: state.user.uid,
+    transactions: state.transactions
   })
 }
 
@@ -100,6 +94,12 @@ const mapDispatchToProps = (dispatch) => ({
       dispatch({
         type: 'GET_USER',
         user: user
+      })
+    },
+    getTransactions: (transactions) => {
+      dispatch({
+        type: 'GET_TRANSACTIONS',
+        transactions: transactions
       })
     }
 })
