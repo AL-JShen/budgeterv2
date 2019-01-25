@@ -3,16 +3,8 @@ import Sidebar from './Sidebar';
 import Log from './Log';
 import db from './FirestoreDB';
 import firebase from 'firebase';
-import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme} from 'victory';
+import { VictoryBar, VictoryPie, VictoryChart, VictoryAxis, VictoryTheme} from 'victory';
 import { connect } from 'react-redux';
-
-
-const data = [
-  {quarter: 1, earnings: 13000},
-  {quarter: 2, earnings: 16500},
-  {quarter: 3, earnings: 14250},
-  {quarter: 4, earnings: 19000}
-]
 
 class Overview extends Component {
 
@@ -20,6 +12,7 @@ class Overview extends Component {
     super(props);
     this.updateUser = this.updateUser.bind(this);
     this.getTransactions = this.getTransactions.bind(this);
+    this.categoricalCosts = this.categoricalCosts.bind(this);
   }
 
   updateUser() {
@@ -44,6 +37,20 @@ class Overview extends Component {
   componentWillMount() {
     this.updateUser();
     this.getTransactions();
+    this.categoricalCosts();
+  }
+
+  categoricalCosts() {
+    let cats = [];
+    this.props.transactions.reduce((acc, cur) => {
+      if (!(acc[cur.category])) {
+        acc[cur.category] = {'category': cur.category, 'cost': 0};
+        cats.push(acc[cur.category]);
+      }
+      acc[cur.category].cost += parseInt(cur.cost);
+      return acc;
+    }, {});
+    return cats
   }
 
   render() {
@@ -64,13 +71,24 @@ class Overview extends Component {
         })}
 
         <div className='overview'>
-          <VictoryChart domainPadding={20} theme={VictoryTheme.material} scale={{ x: "time" }}>
+          <VictoryChart domainPadding={20}
+                        width={600}
+                        height={600}
+                        theme={VictoryTheme.material}
+                        scale={{ x: "time" }}>
             <VictoryBar
               data={this.props.transactions}
-              x={(datum) => new Date(datum.date).toDateString()}
-              y={(datum) => datum.cost}/>
+              x={(datum) => new Date(datum.date)}
+              y={(datum) => datum.cost} />
           </VictoryChart>
+
+            <VictoryPie
+              data={this.categoricalCosts()}
+              x={(datum) => `${datum.category}: ${datum.cost}`}
+              y={(datum) => datum.cost} />
         </div>
+
+
       </div>
     );
   }

@@ -21,7 +21,6 @@ class App extends Component {
             <li><Link to="/signin">Sign In</Link></li>
             <li><Link to="/overview">Overview</Link></li>
             <li><Link to="/signout">Sign Out</Link></li>
-
           </ul>
 
           <Route exact path="/welcome" component={Welcome} />
