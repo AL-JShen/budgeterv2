@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Sidebar from './Sidebar';
 import Log from './Log';
+import Pie from '../Visuals/Pie.js'
 import db from './FirestoreDB';
 import firebase from 'firebase';
-import { VictoryBar, VictoryPie, VictoryChart, VictoryAxis, VictoryTheme} from 'victory';
+import { VictoryBar, VictoryChart, VictoryTheme, VictoryTooltip} from 'victory';
 import { connect } from 'react-redux';
 
 class Overview extends Component {
@@ -12,7 +13,6 @@ class Overview extends Component {
     super(props);
     this.updateUser = this.updateUser.bind(this);
     this.getTransactions = this.getTransactions.bind(this);
-    this.categoricalCosts = this.categoricalCosts.bind(this);
   }
 
   updateUser() {
@@ -37,20 +37,6 @@ class Overview extends Component {
   componentWillMount() {
     this.updateUser();
     this.getTransactions();
-    this.categoricalCosts();
-  }
-
-  categoricalCosts() {
-    let cats = [];
-    this.props.transactions.reduce((acc, cur) => {
-      if (!(acc[cur.category])) {
-        acc[cur.category] = {'category': cur.category, 'cost': 0};
-        cats.push(acc[cur.category]);
-      }
-      acc[cur.category].cost += parseInt(cur.cost);
-      return acc;
-    }, {});
-    return cats
   }
 
   render() {
@@ -77,15 +63,17 @@ class Overview extends Component {
                         theme={VictoryTheme.material}
                         scale={{ x: "time" }}>
             <VictoryBar
+              labelComponent={<VictoryTooltip/>}
               data={this.props.transactions}
+              labels={(datum) => datum.cost}
               x={(datum) => new Date(datum.date)}
               y={(datum) => datum.cost} />
           </VictoryChart>
 
-            <VictoryPie
-              data={this.categoricalCosts()}
-              x={(datum) => `${datum.category}: ${datum.cost}`}
-              y={(datum) => datum.cost} />
+          <div className='pie'>
+            <Pie />
+          </div>
+
         </div>
 
 
