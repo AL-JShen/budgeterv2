@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { VictoryLabel, VictoryTooltip, VictoryPie } from 'victory';
-import { connect } from 'react-redux';
+import { VictoryLabel, VictoryTooltip, VictoryPie} from 'victory';
 
 function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){
@@ -11,14 +10,13 @@ function toTitleCase(str) {
 class Label extends Component {
 
   render() {
-    console.log('props', this.props)
     return (
       <svg>
         <g>
           <VictoryLabel {...this.props}/>
           <VictoryTooltip
             {...this.props}
-            x={200} y={270}
+            x={200} y={260}
             text={
               `${this.props.datum.category}
               ______
@@ -32,7 +30,7 @@ class Label extends Component {
             cornerRadius={65}
             width={130}
             height={130}
-            flyoutStyle={{ fill: "black" }}
+            flyoutStyle={{ fill: "#111", stroke: "#05a5d1", strokeWidth: "2"}}
           />
         </g>
       </svg>
@@ -46,11 +44,10 @@ class Pie extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      dummy: true
+    }
     this.categoricalCosts = this.categoricalCosts.bind(this);
-  }
-
-  componentWillMount() {
-    console.log(this.categoricalCosts())
   }
 
   categoricalCosts() {
@@ -68,15 +65,25 @@ class Pie extends Component {
   }
 
   render() {
+
+    let renderDat = this.categoricalCosts()
+    if (this.state.dummy) {
+      renderDat = this.categoricalCosts().slice(0,1)
+      setTimeout(() => { this.setState({ dummy: false }); }, 10);
+    }
+
     return (
       <div>
           <VictoryPie
-            style={{ labels: { fill: "white", fontSize: 8, padding: 10, textAlign: "center"}}}
+            animate={{ duration: 2000 }}
+            colorScale='qualitative'
+            style={{ labels: { fill: "#fff", fontSize: 8, padding: 10, textAlign: "center"}}}
             innerRadius={100}
-            labelRadius={120}
+            outerRadius={140}
+            labelRadius={115}
             labelComponent={<Label/>}
             labels={(d) => `${d.category}\n$${d.cost}`}
-            data={this.categoricalCosts()}
+            data={renderDat}
             x={(d) => d.category}
             y={(d) => d.cost}
           />
@@ -85,20 +92,4 @@ class Pie extends Component {
   }
 }
 
-
-const mapStateToProps = (state) => {
-  return({
-    transactions: state.transactions
-  })
-}
-
-const mapDispatchToProps = (dispatch) => ({
-    getTransactions: (transactions) => {
-      dispatch({
-        type: 'GET_TRANSACTIONS',
-        transactions: transactions
-      })
-    }
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Pie);;
+export default Pie;

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Sidebar from './Sidebar';
 import Log from './Log';
-import Pie from '../Visuals/Pie.js'
+import Bar from '../Visuals/Bar.js';
+import Pie from '../Visuals/Pie.js';
+import Area from '../Visuals/Area.js';
 import db from './FirestoreDB';
 import firebase from 'firebase';
 import { VictoryBar, VictoryChart, VictoryTheme, VictoryTooltip} from 'victory';
@@ -57,21 +59,17 @@ class Overview extends Component {
         })}
 
         <div className='overview'>
-          <VictoryChart domainPadding={20}
-                        width={600}
-                        height={600}
-                        theme={VictoryTheme.material}
-                        scale={{ x: "time" }}>
-            <VictoryBar
-              labelComponent={<VictoryTooltip/>}
-              data={this.props.transactions}
-              labels={(datum) => datum.cost}
-              x={(datum) => new Date(datum.date)}
-              y={(datum) => datum.cost} />
-          </VictoryChart>
+
+          <div className='bar'>
+            <Bar {...this.props} />
+          </div>
 
           <div className='pie'>
-            <Pie />
+            <Pie {...this.props} />
+          </div>
+
+          <div className='area'>
+            <Area {...this.props}/>
           </div>
 
         </div>
