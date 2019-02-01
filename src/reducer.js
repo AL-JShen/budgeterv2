@@ -3,7 +3,8 @@ const initState = {
     uid: '',
     displayName: ''
   },
-  transactions: []
+  transactions: [],
+  categoricals: []
 }
 
 const reducer = (state = initState, action) => {
@@ -16,10 +17,14 @@ const reducer = (state = initState, action) => {
     case ('SIGN_OUT'):
       return initState;
     case ('GET_TRANSACTIONS'):
-      console.log(action.transactions)
       return({
         ...state,
         transactions: action.transactions
+      })
+    case ('GET_CATEGORICALS'):
+      return({
+        ...state,
+        categoricals: action.categoricals
       })
     default:
        return state

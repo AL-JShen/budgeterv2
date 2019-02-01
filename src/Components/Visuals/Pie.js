@@ -1,12 +1,6 @@
 import React, { Component } from 'react';
 import { VictoryLabel, VictoryTooltip, VictoryPie} from 'victory';
 
-function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function(txt){
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-}
-
 class Label extends Component {
 
   render() {
@@ -47,35 +41,13 @@ class Pie extends Component {
     this.state = {
       dummy: true
     }
-    this.categoricalCosts = this.categoricalCosts.bind(this);
-  }
-
-  categoricalCosts() {
-    let cats = [];
-    this.props.transactions.reduce((acc, cur) => {
-      if (!(acc[cur.category])) {
-        acc[cur.category] = {'category': toTitleCase(cur.category), 'cost': 0, 'count': 0};
-        cats.push(acc[cur.category]);
-      }
-      acc[cur.category].cost += parseInt(cur.cost);
-      acc[cur.category].count += 1;
-      return acc
-    }, {});
-    return cats
   }
 
   render() {
-
-    let renderDat = this.categoricalCosts()
-    if (this.state.dummy) {
-      renderDat = this.categoricalCosts().slice(0,1)
-      setTimeout(() => { this.setState({ dummy: false }); }, 10);
-    }
-
     return (
       <div>
           <VictoryPie
-            animate={{ duration: 2000 }}
+            animate={{ duration: 1000 }}
             colorScale='qualitative'
             style={{ labels: { fill: "#fff", fontSize: 8, padding: 10, textAlign: "center"}}}
             innerRadius={100}
@@ -83,7 +55,7 @@ class Pie extends Component {
             labelRadius={115}
             labelComponent={<Label/>}
             labels={(d) => `${d.category}\n$${d.cost}`}
-            data={renderDat}
+            data={this.props.categoricals}
             x={(d) => d.category}
             y={(d) => d.cost}
           />
@@ -91,5 +63,6 @@ class Pie extends Component {
     );
   }
 }
+
 
 export default Pie;

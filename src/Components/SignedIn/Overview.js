@@ -6,8 +6,13 @@ import Pie from '../Visuals/Pie.js';
 import Area from '../Visuals/Area.js';
 import db from './FirestoreDB';
 import firebase from 'firebase';
-import { VictoryBar, VictoryChart, VictoryTheme, VictoryTooltip} from 'victory';
 import { connect } from 'react-redux';
+
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
 
 class Overview extends Component {
 
@@ -15,6 +20,7 @@ class Overview extends Component {
     super(props);
     this.updateUser = this.updateUser.bind(this);
     this.getTransactions = this.getTransactions.bind(this);
+    this.categoricalCosts = this.categoricalCosts.bind(this);
   }
 
   updateUser() {
@@ -36,9 +42,25 @@ class Overview extends Component {
     })
   }
 
+  categoricalCosts() {
+    let cats = [];
+    this.props.transactions.reduce((acc, cur) => {
+      if (!(acc[cur.category])) {
+        acc[cur.category] = {'category': toTitleCase(cur.category), 'cost': 0, 'count': 0, 'transactions': []};
+        cats.push(acc[cur.category]);
+      }
+      acc[cur.category].cost += parseInt(cur.cost);
+      acc[cur.category].count += 1;
+      acc[cur.category].transactions.push({'date': cur.date, 'cost': cur.cost})
+      return acc
+    }, {});
+    this.props.getCategoricals(cats);
+  }
+
   componentWillMount() {
     this.updateUser();
     this.getTransactions();
+    this.categoricalCosts();
   }
 
   render() {
@@ -85,7 +107,8 @@ const mapStateToProps = (state) => {
   return({
     displayName: state.user.displayName,
     uid: state.user.uid,
-    transactions: state.transactions
+    transactions: state.transactions,
+    categoricals: state.categoricals
   })
 }
 
@@ -100,6 +123,12 @@ const mapDispatchToProps = (dispatch) => ({
       dispatch({
         type: 'GET_TRANSACTIONS',
         transactions: transactions
+      })
+    },
+    getCategoricals: (categoricals) => {
+      dispatch({
+        type: 'GET_CATEGORICALS',
+        categoricals: categoricals
       })
     }
 })

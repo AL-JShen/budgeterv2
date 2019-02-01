@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { VictoryChart, VictoryTooltip, VictoryBar, VictoryAxis } from 'victory';
+import { VictoryChart, VictoryTooltip, VictoryBar } from 'victory';
 
 class Bar extends Component {
 
