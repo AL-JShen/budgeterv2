@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Sidebar from './Sidebar';
 import Log from './Log';
-import Bar from '../Visuals/Bar.js';
-import Pie from '../Visuals/Pie.js';
-import Area from '../Visuals/Area.js';
+import History from './History';
+import Bar from '../Charts/Bar.js';
+import Doughnut from '../Charts/Doughnut.js';
+import Area from '../Charts/Area.js';
 import db from './FirestoreDB';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
@@ -58,9 +59,15 @@ class Overview extends Component {
   }
 
   componentWillMount() {
-    this.updateUser();
-    this.getTransactions();
-    this.categoricalCosts();
+    var p = new Promise((resolve, reject) => {
+      this.updateUser();
+      resolve('Updated')
+    });
+    p.then(() => {
+      this.getTransactions();
+      this.categoricalCosts();
+    })
+    console.log(this.props)
   }
 
   render() {
@@ -73,12 +80,7 @@ class Overview extends Component {
 
         <Log />
 
-        {this.props.transactions.map((item, i) => {
-          const dat = item
-          return (
-            <div key={i}>A {dat.category} purchase on {new Date(dat.date).toDateString()} cost ${dat.cost}</div>
-          )
-        })}
+        <History transactions={this.props.transactions} />
 
         <div className='overview'>
 
@@ -86,12 +88,12 @@ class Overview extends Component {
             <Bar {...this.props} />
           </div>
 
-          <div className='pie'>
-            <Pie {...this.props} />
+          <div className='doughnut'>
+            <Doughnut {...this.props} />
           </div>
 
           <div className='area'>
-            <Area {...this.props}/>
+            <Area {...this.props} />
           </div>
 
         </div>
@@ -102,6 +104,14 @@ class Overview extends Component {
   }
 
 }
+
+// <div className='pie'>
+//   <Pie {...this.props} />
+// </div>
+//
+
+
+
 
 const mapStateToProps = (state) => {
   return({

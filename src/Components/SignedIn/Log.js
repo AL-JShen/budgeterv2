@@ -28,13 +28,16 @@ class Log extends Component {
     this.setState({
       date: date
     })
+    console.log(date)
   }
 
   handleLog(event) {
     event.preventDefault()
     const cost = this.state.cost;
     const category = this.state.category;
-    const date = this.state.date;
+    const date = new Date(this.state.date.getFullYear(),
+                          this.state.date.getMonth(),
+                          this.state.date.getDate())
     this.setState({
       cost: '',
       category: '',
