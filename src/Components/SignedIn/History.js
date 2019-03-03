@@ -16,8 +16,8 @@ class History extends Component {
         {this.props.transactions.map((item, i) => {
           const dat = item;
           return (
-            <div key={i}>
-              <Collapsible trigger={`${toTitleCase(dat.category)} $${dat.cost}`}
+            <div key={i} className='transactionContainer'>
+              <Collapsible trigger={`${toTitleCase(dat.category)} $${dat.cost.toFixed(2)}`}
                 triggerTagName='collapsibleTrigger'
                 className='collapsibleContainer'>
 
