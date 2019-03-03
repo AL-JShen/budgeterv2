@@ -3,6 +3,7 @@ import Welcome from './SignedOut/Welcome.js';
 import Signup from './Auth/Signup';
 import Signin from './Auth/Signin';
 import Signout from './Auth/Signout';
+import History from './SignedIn/History';
 import Overview from './SignedIn/Overview';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { connect } from 'react-redux';
@@ -13,6 +14,7 @@ function ConditionalLinks(props) {
       <div>
         <ul>
           <li><Link to="/overview">Overview</Link></li>
+          <li><Link to="/history">History</Link></li>
           <li><Link to="/signout">Sign Out</Link></li>
         </ul>
       </div>
@@ -43,6 +45,7 @@ class Routes extends Component {
           <Route path="/signup" component={Signup} />
           <Route path="/signin" component={Signin} />
           <Route path="/overview" component={Overview} />
+          <Route path="/history" component={History} />
           <Route path="/signout" component={Signout} />
 
         </div>

@@ -11,6 +11,7 @@ class Log extends Component {
     this.state = {
       cost: '',
       category: '',
+      notes: '',
       date: new Date(),
     };
     this.handleChange = this.handleChange.bind(this);
@@ -35,17 +36,20 @@ class Log extends Component {
     event.preventDefault()
     const cost = this.state.cost;
     const category = this.state.category;
+    const notes = this.state.notes ? category : this.state.notes
     const date = new Date(this.state.date.getFullYear(),
                           this.state.date.getMonth(),
                           this.state.date.getDate())
     this.setState({
       cost: '',
       category: '',
+      notes: '',
       date: new Date()
     })
     db.collection('users').doc(this.props.uid).collection('transactions').add({
       cost: cost,
       category: category,
+      notes: notes,
       date: date
     })
   }
@@ -56,6 +60,7 @@ class Log extends Component {
         <form onSubmit={this.handleLog}>
           <input type="number" step="0.01" min="0" name="cost" placeholder='Cost' value={this.state.cost} onChange={this.handleChange} />
           <input type="text" name="category" placeholder='Category' value={this.state.category} onChange={this.handleChange} />
+          <input type="text" name="notes" placeholder="Notes" value={this.state.notes} onChange={this.handleChange} />
           <DatePicker dateFormat="yyyy-MM-dd" selected={this.state.date} onChange={this.handleDate} />
           <br />
           <button type="submit">Log transaction.</button>

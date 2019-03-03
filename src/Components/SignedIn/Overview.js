@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Sidebar from './Sidebar';
 import Log from './Log';
-import History from './History';
 import Bar from '../Charts/Bar.js';
 import Doughnut from '../Charts/Doughnut.js';
 import Area from '../Charts/Area.js';
@@ -37,6 +36,7 @@ class Overview extends Component {
       let dat = docSnapshot.docs.map((doc) => ({
         category: doc.data().category,
         cost: doc.data().cost,
+        notes: doc.data().notes,
         date: doc.data().date.seconds * 1000
       }))
       this.props.getTransactions(dat);
@@ -79,8 +79,6 @@ class Overview extends Component {
         Hello {this.props.displayName}
 
         <Log />
-
-        <History transactions={this.props.transactions} />
 
         <div className='overview'>
 
