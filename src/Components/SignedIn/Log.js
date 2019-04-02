@@ -52,6 +52,9 @@ class Log extends Component {
       notes: notes,
       date: date
     })
+    // .then((docRef) => {
+    //   console.log("Document written with ID: ", docRef.id);
+    // })
   }
 
   render() {

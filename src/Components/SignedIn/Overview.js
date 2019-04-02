@@ -3,7 +3,7 @@ import Sidebar from './Sidebar';
 import Log from './Log';
 import Bar from '../Charts/Bar.js';
 import Doughnut from '../Charts/Doughnut.js';
-import Area from '../Charts/Area.js';
+// import Area from '../Charts/Area.js';
 import db from './FirestoreDB';
 import firebase from 'firebase';
 import { connect } from 'react-redux';
@@ -37,7 +37,8 @@ class Overview extends Component {
         category: doc.data().category,
         cost: doc.data().cost,
         notes: doc.data().notes,
-        date: doc.data().date.seconds * 1000
+        date: doc.data().date.seconds * 1000,
+        id: doc.id
       }))
       this.props.getTransactions(dat);
     })
@@ -90,12 +91,7 @@ class Overview extends Component {
             <Doughnut {...this.props} />
           </div>
 
-          <div className='area'>
-            <Area {...this.props} />
-          </div>
-
         </div>
-
 
       </div>
     );
