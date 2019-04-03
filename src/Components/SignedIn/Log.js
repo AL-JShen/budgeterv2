@@ -13,6 +13,7 @@ class Log extends Component {
       category: '',
       notes: '',
       date: new Date(),
+      error: '',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleDate = this.handleDate.bind(this);
@@ -33,25 +34,33 @@ class Log extends Component {
   }
 
   handleLog(event) {
-    event.preventDefault()
-    const cost = this.state.cost;
-    const category = this.state.category;
-    const notes = this.state.notes ? category : this.state.notes
-    const date = new Date(this.state.date.getFullYear(),
-                          this.state.date.getMonth(),
-                          this.state.date.getDate())
-    this.setState({
-      cost: '',
-      category: '',
-      notes: '',
-      date: new Date()
-    })
-    db.collection('users').doc(this.props.uid).collection('transactions').add({
-      cost: cost,
-      category: category,
-      notes: notes,
-      date: date
-    })
+    if (this.state.cost != '') and (this.state.category != '') {
+      event.preventDefault()
+      const cost = this.state.cost;
+      const category = this.state.category;
+      const notes = this.state.notes ? category : this.state.notes
+      const date = new Date(this.state.date.getFullYear(),
+                            this.state.date.getMonth(),
+                            this.state.date.getDate())
+      this.setState({
+        cost: '',
+        category: '',
+        notes: '',
+        date: new Date(),
+        error: ''
+      })
+      db.collection('users').doc(this.props.uid).collection('transactions').add({
+        cost: cost,
+        category: category,
+        notes: notes,
+        date: date
+      })
+    } else {
+      this.setState({
+        error: 'You need to enter a cost and a category.'
+      })
+    }
+
     // .then((docRef) => {
     //   console.log("Document written with ID: ", docRef.id);
     // })
@@ -68,6 +77,7 @@ class Log extends Component {
           <br />
           <button type="submit">Log transaction.</button>
         </form>
+        {this.state.error}
 
       </div>
     );
