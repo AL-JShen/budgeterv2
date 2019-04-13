@@ -34,8 +34,8 @@ class Log extends Component {
   }
 
   handleLog(event) {
-    if (this.state.cost != '') and (this.state.category != '') {
-      event.preventDefault()
+    event.preventDefault()
+    if (this.state.cost !== '' && this.state.category !== '') {
       const cost = this.state.cost;
       const category = this.state.category;
       const notes = this.state.notes ? category : this.state.notes
