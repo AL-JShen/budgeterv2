@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "chart.js": "^2.7.3",
+    "chartjs-plugin-colorschemes": "^0.3.0",
     "firebase": "^5.7.0",
     "firebaseui": "^3.4.1",
     "react": "^16.6.3",

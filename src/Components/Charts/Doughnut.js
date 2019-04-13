@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Doughnut } from 'react-chartjs-2';
+import 'chartjs-plugin-colorschemes';
 
 class DoughnutChart extends Component {
 
@@ -14,6 +15,13 @@ class DoughnutChart extends Component {
             }]
           }}
           redraw
+          options={{
+            plugins: {
+              colorschemes: {
+                scheme: 'brewer.Paired12'
+              }
+            }
+          }}
         />
       </div>
     );
