@@ -37,7 +37,7 @@ class Log extends Component {
     event.preventDefault()
     if (this.state.cost !== '' && this.state.category !== '') {
       const cost = this.state.cost;
-      const category = this.state.category;
+      const category = this.state.category.toLowerCase();
       const notes = this.state.notes ? category : this.state.notes
       const date = new Date(this.state.date.getFullYear(),
                             this.state.date.getMonth(),
